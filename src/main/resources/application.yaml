@@ -1,0 +1,17 @@
+spring:
+    application:
+        name: TestContainers
+
+    datasource:
+        username: postgres
+        password: 1
+        url: jdbc:postgresql://localhost:5432/users_db
+        driver-class-name: org.postgresql.Driver
+
+    jpa:
+        hibernate:
+        ddl-auto: create
+        show-sql: true
+
+server:
+    port: 8081
