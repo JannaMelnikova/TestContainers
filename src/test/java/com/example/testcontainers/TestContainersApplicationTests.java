@@ -92,7 +92,76 @@ class TestContainersApplicationTests {
                 .then()
                 .statusCode(201)
                 .body("name", equalTo("User1"));
-
     }
+
+    @Test
+    void testFindById() {
+        User user1=new User();
+        user1.setName("User111");
+        userRepository.save(user1);
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(user1)
+                .when()
+                .get("/api/users/{id}", user1.getId())
+                .then()
+                .statusCode(200)
+                .body("name", equalTo("User111"));
+    }
+    @Test
+    void testDeleteById() {
+        Long id=1L;
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userRepository.findById(id))
+                .when()
+                .delete("/api/users/{id}", id)
+                .then()
+                .statusCode(204);
+    }
+
+    @Test
+    void testUpdateById() {
+        User user=new User();
+        user.setName("User1");
+        User savedUser = userRepository.save(user);
+        Long id=savedUser.getId();
+
+        User updateUser=new User();
+        updateUser.setId(id);
+        updateUser.setName("User111");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(updateUser)
+                .when()
+                .put("/api/users/{id}", id)
+                .then()
+                .statusCode(200)
+                .body("name", equalTo("User111"));
+    }
+
+    @Test
+    void testPatchById() {
+        User user=new User();
+        user.setName("User1");
+        User savedUser = userRepository.save(user);
+        Long id=savedUser.getId();
+
+        User patchUser=new User();
+        patchUser.setId(id);
+        patchUser.setName("User111");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(patchUser)
+                .when()
+                .patch("/api/users/{id}", id)
+                .then()
+                .statusCode(200)
+                .body("name", equalTo("User111"));
+    }
+
 
 }
